@@ -1,12 +1,11 @@
-Apologies for misunderstanding. Based on the code provided, here's a description of what the game is about:
 
-Title: **Click on the Pig!**
+# Click on the pig! 
 
-Description:
+## Description:
 
-"Click on the Pig!" is a simple and addictive game where the player's objective is to click on a moving green pig character that appears on the screen while avoiding certain obstacles. The game provides an immersive experience through colorful graphics, engaging sound effects, and responsive controls.
+"Click on the Pig!" is a simple game where the player's objective is to click on a moving green pig character that appears on the screen.
 
-Gameplay:
+## Gameplay:
 
 1. **Objective**: The main objective of the game is to click on the green pig character as it moves around the screen.
 
@@ -32,4 +31,99 @@ Features:
 
 - **Adaptive Difficulty**: The game's difficulty increases gradually as the player progresses, providing a suitable challenge for both beginners and experienced players.
 
-"Click on the Pig!" offers simple yet entertaining gameplay suitable for players of all ages. It's a game that challenges players' reflexes and precision while providing an enjoyable experience filled with fun and excitement.
+
+
+
+## Screenshot:
+
+![App Screenshot](https://github.com/fdamborsky/Click-on-the-pig/blob/main/screenshot.png?raw=true)
+
+
+## Code:
+
+### Initialization
+
+```
+width = root.winfo_screenwidth()//1.5
+height = root.winfo_screenheight()//1.5
+
+screen = pygame.display.set_mode((width,height))
+pygame.display.set_caption("Click on the pig!")
+```
+
+- game opens in 2/3 of screen size
+
+=> Then there is setting which i think you can understand
+
+### Game start
+
+```
+# - Main cycle
+gamerunning = True
+while gamerunning:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            gamerunning = False
+```
+
+- variable `gamerunning` will be created and will be set to `True` in order to run the game after python file starts
+
+### Collision with the pig
+- first we will get position mouse of when click happened
+```
+click_x = event.pos[0]
+click_y = event.pos[1]
+```
+- then we'll use built-in fuction `greenpig_rect.collidepoint(click_x,click_y` that checks if point of click was inside of `greenpig_rect` and changes some game stats.
+
+```
+while previous_greenpig_x == greenpig_x and previous_greenpig_y == greenpig_y:
+                    greenpig_x = random.choice([-1,1])
+                    greenpig_y = random.choice([-1,1])
+```
+
+- this ensures that after you click on the pig in changes direction of pig movement
+
+
+### Fullscreen
+```
+if event.type == pygame.MOUSEBUTTONDOWN:
+            click_x = event.pos[0]
+            click_y = event.pos[1]
+            if fullscreen_rect.collidepoint(click_x,click_y) and fullscreen_number == 0:
+```
+
+- if event of mouse click (right, left or middle) is registered then we'll save info to the variables of `click_x` and `click_y`
+- right after we check if point of click collided with position with fullscreen button and if fullscreen is set to OFF
+
+```
+width = int(root.winfo_screenwidth())
+height = int(root.winfo_screenheight())
+
+# SET FULL SCREEN
+screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+background_image = pygame.image.load(r"images/background 1920x1080.jpg")
+```
+
+### Pig movement
+- Because whole game is in `while` loop we use simple code to make pig move:
+
+```
+greenpig_rect.x += (greenpig_x) * greenpig_speed
+greenpig_rect.y += (greenpig_y) * greenpig_speed
+```
+- `greenpig_x` or `greenpig_y` haves value of 1 or -1 and we multiply it with value `greenpig_speed` that increases everytime we hit pig
+
+### Pig bouce
+- if pig hits top, bottom , left or right we set that value to zero to prevent pig going off the screen
+- then we set greenpig_x/y to 1 or 2 through `random.choice([1,-1])`
+
+### Lives ran out
+- on the end of each cycle we check if lives didn't ran out, if they do we display text that says that we need to pres space to continue
+
+### Screen update
+- at end of each loop we update display at the rate of 60 fps
+```
+pygame.display.update()
+time.tick(fps)
+```
